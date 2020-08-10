@@ -10,11 +10,11 @@ namespace ShopingCar.Web.Helper
         public AutoMapperProfile()
         {
             CreateMap<Product, ProductDto>();
-            CreateMap<Product, EditProductViewModel>();
+            CreateMap<Product, EditProductViewModel>().ReverseMap();
             CreateMap<Product, CreateProductViewModel>();
             CreateMap<Product, ProductViewModel>();
             CreateMap<Product, DetailsViewModels>();
-            CreateMap<Product, DeleteProductViewModel>();
+            CreateMap<Product, DeleteProductViewModel>().ReverseMap();
         }
     }
 }

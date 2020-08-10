@@ -15,7 +15,7 @@ namespace ShopingCar.Web.Controllers
         private readonly IProduct _product;
         private readonly IMapper _mapper;
 
-        public ProductsController(IProduct product, 
+        public ProductsController(IProduct product,
             IMapper mapper)
         {
             _product = product;
@@ -24,7 +24,7 @@ namespace ShopingCar.Web.Controllers
 
         public IActionResult Index()
         {
-            var GetAllProduct =  _product.GetAllProduct();
+            var GetAllProduct = _product.GetAllProduct();
             var mapperProduct = _mapper.Map<List<ProductDto>>(GetAllProduct);
 
             return View(mapperProduct);
@@ -43,27 +43,32 @@ namespace ShopingCar.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Product product)
+        public IActionResult Create(CreateProductViewModel vm)
         {
             if (ModelState.IsValid)
             {
-               
+                var mapperProductInModel = _mapper.Map<Product>(vm);
+                _product.InsertProduct(mapperProductInModel);
+                _product.Save();
+                return RedirectToAction(nameof(Index));
             }
             return View();
         }
 
         public IActionResult Edit(int id)
         {
-
             var product = _product.GetProductById(id);
             var mapperProduct = _mapper.Map<EditProductViewModel>(product);
             return View(mapperProduct);
         }
 
         [HttpPost]
-        public IActionResult Edit()
+        public IActionResult Edit(EditProductViewModel vm)
         {
-            return View();
+            var mapperProductInModel = _mapper.Map<Product>(vm);
+            _product.UpdateProduct(mapperProductInModel);
+            _product.Save();
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Delete(int id)
@@ -73,5 +78,13 @@ namespace ShopingCar.Web.Controllers
             return View(mapperProduct);
         }
 
+        [HttpPost]
+        public IActionResult Delete(DeleteProductViewModel vm)
+        {
+            var mapperProductInModel = _mapper.Map<Product>(vm);
+            _product.DeleteProrduct(mapperProductInModel);
+            _product.Save();
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
